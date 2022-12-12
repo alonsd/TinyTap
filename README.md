@@ -1,2 +1,2 @@
-# TinyTap
- 
+#### Heroes - Android Template Application 
+

@@ -1,35 +1,34 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.tinytap.ui.screens.dashboard.state.data
 
-import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
+import com.tinytap.core.ui.SwipeToDismissVertical
 import com.tinytap.model.ui_models.DashboardCardModel
+import com.tinytap.ui.screens.dashboard.viewmodel.DashboardViewModel.UiEvent.UserSwipedList.SwipeDirection
 import com.tinytap.ui.theme.backgroundEndColor
 import com.tinytap.ui.theme.backgroundStartColor
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DashboardDataState(dashboardCardModels: List<DashboardCardModel>) {
+fun DashboardDataState(
+    dashboardCardModels: List<DashboardCardModel>,
+    onCardSwiped: (direction: SwipeDirection, modelId: String) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -44,7 +43,7 @@ fun DashboardDataState(dashboardCardModels: List<DashboardCardModel>) {
         verticalArrangement = Arrangement.Center
     ) {
         LazyRow(modifier = Modifier.wrapContentSize()) {
-            items(dashboardCardModels) { model ->
+            items(dashboardCardModels, key = { it.id }) { model ->
 
                 val dismissState = rememberDismissState()
 
@@ -52,16 +51,16 @@ fun DashboardDataState(dashboardCardModels: List<DashboardCardModel>) {
                     key1 = dismissState.isDismissed(DismissDirection.EndToStart),
                     key2 = dismissState.isDismissed(DismissDirection.StartToEnd)
                 ) {
-                    dismissState.reset()
+//                    dismissState.reset()
                 }
                 when {
                     dismissState.isDismissed(DismissDirection.EndToStart) -> {
-                        Toast.makeText(LocalContext.current, "end to start", Toast.LENGTH_SHORT).show()
-                        //TODO - implement delete
+//                        Toast.makeText(LocalContext.current, "end to start", Toast.LENGTH_SHORT).show()
+                        onCardSwiped(SwipeDirection.DOWN_TO_UP, model.id)
                     }
                     dismissState.isDismissed(DismissDirection.StartToEnd) -> {
-                        Toast.makeText(LocalContext.current, "start to end", Toast.LENGTH_SHORT).show()
-                        //TODO - implement extra details
+//                        Toast.makeText(LocalContext.current, "start to end", Toast.LENGTH_SHORT).show()
+                        onCardSwiped(SwipeDirection.UP_TO_DOWN, model.id)
                     }
                 }
 
@@ -69,21 +68,21 @@ fun DashboardDataState(dashboardCardModels: List<DashboardCardModel>) {
                     state = dismissState,
                     background = {
                         val color by animateColorAsState(
-                            when {
-                                dismissState.targetValue == DismissValue.Default-> Color.Transparent
-                                dismissState.targetValue == DismissValue.DismissedToEnd -> Color.Blue
-                                dismissState.targetValue == DismissValue.DismissedToStart -> Color.Red
+                            when (dismissState.targetValue) {
+                                DismissValue.Default -> Color.Transparent
+                                DismissValue.DismissedToEnd -> Color.Blue
+                                DismissValue.DismissedToStart -> Color.Red
                                 else -> Color.Transparent
                             }
                         )
                         Box(
                             Modifier
                                 .fillMaxSize()
-                                .background(color),
+                                .background(color)
                         )
                     },
                     dismissContent = {
-                        DashboardCard(model = model)
+                        DashboardCard(modifier = Modifier.animateItemPlacement(), model = model)
                     }
                 )
             }
@@ -103,5 +102,6 @@ fun DashboardDataStatePreview() {
             DashboardCardModel("", "url", "TinyTap5", "TinyTap5"),
             DashboardCardModel("", "url", "TinyTap5", "TinyTap5"),
         )
-    )
+    ) { _, _ ->
+    }
 }

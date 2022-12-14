@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface RemoteRedditDataSource {
 
-    val bestFromReddit : Flow<NetworkResponse<RedditResponseModel, String>>
+    suspend fun getBestFromReddit()  : NetworkResponse<RedditResponseModel, String>
 }

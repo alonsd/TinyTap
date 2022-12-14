@@ -24,7 +24,9 @@ fun DashboardScreen(
     val state by viewModel.uiState.collectAsState()
     when (state.state) {
         DashboardViewModel.UiState.State.Data -> {
-            DashboardDataState(state.models)
+            DashboardDataState(state.models) { swipeDirection, modelId ->
+                viewModel.submitEvent(DashboardViewModel.UiEvent.UserSwipedList(swipeDirection, modelId))
+            }
         }
         DashboardViewModel.UiState.State.Error -> {
             Toast.makeText(LocalContext.current, state.errorMessage, Toast.LENGTH_SHORT).show()

@@ -1,4 +1,4 @@
-package com.tinytap.ui.screens.dashboard.state.data
+package com.tinytap.core.ui
 
 import android.util.Log
 import androidx.compose.foundation.gestures.Orientation

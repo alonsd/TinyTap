@@ -11,6 +11,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,16 +46,22 @@ fun DashboardDataState(dashboardCardModels: List<DashboardCardModel>) {
         LazyRow(modifier = Modifier.wrapContentSize()) {
             items(dashboardCardModels) { model ->
 
-                var dismissState = rememberDismissState()
+                val dismissState = rememberDismissState()
 
+                LaunchedEffect(
+                    key1 = dismissState.isDismissed(DismissDirection.EndToStart),
+                    key2 = dismissState.isDismissed(DismissDirection.StartToEnd)
+                ) {
+                    dismissState.reset()
+                }
                 when {
-                    dismissState.isDismissed(DismissDirection.EndToStart) ->{
-                        //TODO - implement extra info
-                        dismissState = DismissState(DismissValue.Default)
-                    }
-                    dismissState.isDismissed(DismissDirection.StartToEnd) ->{
+                    dismissState.isDismissed(DismissDirection.EndToStart) -> {
+                        Toast.makeText(LocalContext.current, "end to start", Toast.LENGTH_SHORT).show()
                         //TODO - implement delete
-                        dismissState = DismissState(DismissValue.Default)
+                    }
+                    dismissState.isDismissed(DismissDirection.StartToEnd) -> {
+                        Toast.makeText(LocalContext.current, "start to end", Toast.LENGTH_SHORT).show()
+                        //TODO - implement extra details
                     }
                 }
 
@@ -61,32 +69,18 @@ fun DashboardDataState(dashboardCardModels: List<DashboardCardModel>) {
                     state = dismissState,
                     background = {
                         val color by animateColorAsState(
-                            when (dismissState.targetValue) {
-                                DismissValue.Default -> Color.Transparent
-                                DismissValue.DismissedToEnd -> Color.Blue
-                                DismissValue.DismissedToStart -> Color.Red
+                            when {
+                                dismissState.targetValue == DismissValue.Default-> Color.Transparent
+                                dismissState.targetValue == DismissValue.DismissedToEnd -> Color.Blue
+                                dismissState.targetValue == DismissValue.DismissedToStart -> Color.Red
+                                else -> Color.Transparent
                             }
                         )
-                        val alignment = Alignment.CenterEnd
-                        val icon = Icons.Default.Delete
-
-                        val scale by animateFloatAsState(
-                            if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
-                        )
-
                         Box(
                             Modifier
                                 .fillMaxSize()
-                                .background(color)
-                                .padding(horizontal = Dp(20f)),
-                            contentAlignment = alignment
-                        ) {
-                            Icon(
-                                icon,
-                                contentDescription = "Delete Icon",
-                                modifier = Modifier.scale(scale)
-                            )
-                        }
+                                .background(color),
+                        )
                     },
                     dismissContent = {
                         DashboardCard(model = model)

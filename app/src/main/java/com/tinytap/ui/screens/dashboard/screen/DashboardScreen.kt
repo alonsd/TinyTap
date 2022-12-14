@@ -12,7 +12,7 @@ import com.tinytap.core.ui.GeneralLoadingState
 import com.tinytap.ui.screens.dashboard.actions.DashboardExtraInformationDialog
 import com.tinytap.ui.screens.dashboard.state.data.DashboardDataState
 import com.tinytap.ui.screens.dashboard.viewmodel.DashboardViewModel.UiAction.NoAction
-import com.tinytap.ui.screens.dashboard.viewmodel.DashboardViewModel.UiEvent.UserSwipedList
+import com.tinytap.ui.screens.dashboard.viewmodel.DashboardViewModel.UiEvent.UserSwipedCard
 
 @RootNavGraph(start = true)
 @ExperimentalComposeUiApi
@@ -25,7 +25,7 @@ fun DashboardScreen(
     val state by viewModel.uiState.collectAsState()
     val action by viewModel.uiAction.collectAsState(initial = NoAction)
 
-    when(action) {
+    when (action) {
         NoAction -> Unit
         is DashboardViewModel.UiAction.ShowExtraInformationDialog -> {
             val selectedCard = state.selectedCardModel ?: return
@@ -37,9 +37,15 @@ fun DashboardScreen(
 
     when (state.state) {
         DashboardViewModel.UiState.State.Data -> {
-            DashboardDataState(state.models) { swipeDirection, modelId ->
-                viewModel.submitEvent(UserSwipedList(swipeDirection, modelId))
-            }
+            DashboardDataState(
+                dashboardCardModels = state.models,
+                onCardSwiped = { swipeDirection, modelId ->
+                    viewModel.submitEvent(UserSwipedCard(swipeDirection, modelId))
+                },
+                onCardClicked = { model ->
+                    
+                }
+            )
         }
         DashboardViewModel.UiState.State.Error -> {
             Toast.makeText(LocalContext.current, state.errorMessage, Toast.LENGTH_SHORT).show()

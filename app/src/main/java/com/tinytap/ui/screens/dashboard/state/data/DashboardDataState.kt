@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package com.tinytap.ui.screens.dashboard.state.data
 
 import androidx.compose.animation.animateColorAsState
@@ -19,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.tinytap.core.ui.SwipeToDismissVertical
 import com.tinytap.model.ui_models.DashboardCardModel
-import com.tinytap.ui.screens.dashboard.viewmodel.DashboardViewModel.UiEvent.UserSwipedList.SwipeDirection
+import com.tinytap.ui.screens.dashboard.viewmodel.DashboardViewModel.UiEvent.UserSwipedCard.SwipeDirection
 import com.tinytap.ui.theme.backgroundEndColor
 import com.tinytap.ui.theme.backgroundStartColor
 
@@ -27,7 +25,8 @@ import com.tinytap.ui.theme.backgroundStartColor
 @Composable
 fun DashboardDataState(
     dashboardCardModels: List<DashboardCardModel>,
-    onCardSwiped: (direction: SwipeDirection, model: DashboardCardModel) -> Unit
+    onCardSwiped: (direction: SwipeDirection, model: DashboardCardModel) -> Unit,
+    onCardClicked: (model: DashboardCardModel) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -79,7 +78,10 @@ fun DashboardDataState(
                         )
                     },
                     dismissContent = {
-                        DashboardCard(modifier = Modifier.animateItemPlacement(), model = model)
+                        DashboardCard(
+                            model = model,
+                            onCardClicked = onCardClicked
+                        )
                     }
                 )
             }
@@ -98,7 +100,6 @@ fun DashboardDataStatePreview() {
             DashboardCardModel("", "url", "TinyTap4", "TinyTap4"),
             DashboardCardModel("", "url", "TinyTap5", "TinyTap5"),
             DashboardCardModel("", "url", "TinyTap5", "TinyTap5"),
-        )
-    ) { _, _ ->
-    }
+        ), { _, _ -> }, {}
+    )
 }

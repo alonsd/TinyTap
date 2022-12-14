@@ -10,7 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.tinytap.ui.screens.dashboard.viewmodel.DashboardViewModel.UiEvent.UserSwipedList.SwipeDirection
+import com.tinytap.ui.screens.dashboard.viewmodel.DashboardViewModel.UiEvent.UserSwipedCard.SwipeDirection
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
@@ -72,7 +72,7 @@ class DashboardViewModel @Inject constructor(
     private fun observeUiEvents() = viewModelScope.launch {
         uiEvent.collect { event ->
             when (event) {
-                is UiEvent.UserSwipedList -> {
+                is UiEvent.UserSwipedCard -> {
                     when(event.direction) {
                         SwipeDirection.DOWN_TO_UP -> {
                             deleteCard(event.cardModel.id)
@@ -106,7 +106,8 @@ class DashboardViewModel @Inject constructor(
 
     sealed interface UiEvent {
         object ExtraInformationDialogConfirmButtonClicked : UiEvent
-        data class UserSwipedList(val direction: SwipeDirection, val cardModel: DashboardCardModel) : UiEvent {
+        data class UserClickedOnCard(val cardModel: DashboardCardModel)
+        data class UserSwipedCard(val direction: SwipeDirection, val cardModel: DashboardCardModel) : UiEvent {
             enum class SwipeDirection {
                 DOWN_TO_UP,
                 UP_TO_DOWN

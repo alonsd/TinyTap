@@ -2,6 +2,7 @@ package com.tinytap.ui.screens.dashboard.state.data
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -24,13 +25,17 @@ import com.tinytap.ui.theme.backgroundStartColor
 @Composable
 fun DashboardCard(
     modifier: Modifier = Modifier,
-    model: DashboardCardModel
+    model: DashboardCardModel,
+    onCardClicked: (model: DashboardCardModel) -> Unit
 ) {
     Column(
         modifier = modifier
             .size(230.dp, 300.dp)
             .background(Color.Transparent)
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable {
+                onCardClicked(model)
+            },
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Center
     ) {
@@ -83,5 +88,5 @@ fun DashboardCardPreview() {
         model = DashboardCardModel(
             "", "image", "TinyTap", "TinyTap Games"
         )
-    )
+    ) {}
 }

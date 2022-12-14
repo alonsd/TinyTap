@@ -27,7 +27,7 @@ import com.tinytap.ui.theme.backgroundStartColor
 @Composable
 fun DashboardDataState(
     dashboardCardModels: List<DashboardCardModel>,
-    onCardSwiped: (direction: SwipeDirection, modelId: String) -> Unit
+    onCardSwiped: (direction: SwipeDirection, model: DashboardCardModel) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -48,19 +48,16 @@ fun DashboardDataState(
                 val dismissState = rememberDismissState()
 
                 LaunchedEffect(
-                    key1 = dismissState.isDismissed(DismissDirection.EndToStart),
-                    key2 = dismissState.isDismissed(DismissDirection.StartToEnd)
+                    key1 = dismissState.isDismissed(DismissDirection.StartToEnd)
                 ) {
-//                    dismissState.reset()
+                    dismissState.reset()
                 }
                 when {
                     dismissState.isDismissed(DismissDirection.EndToStart) -> {
-//                        Toast.makeText(LocalContext.current, "end to start", Toast.LENGTH_SHORT).show()
-                        onCardSwiped(SwipeDirection.DOWN_TO_UP, model.id)
+                        onCardSwiped(SwipeDirection.DOWN_TO_UP, model)
                     }
                     dismissState.isDismissed(DismissDirection.StartToEnd) -> {
-//                        Toast.makeText(LocalContext.current, "start to end", Toast.LENGTH_SHORT).show()
-                        onCardSwiped(SwipeDirection.UP_TO_DOWN, model.id)
+                        onCardSwiped(SwipeDirection.UP_TO_DOWN, model)
                     }
                 }
 

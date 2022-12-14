@@ -14,7 +14,7 @@ import com.tinytap.ui.screens.dashboard.viewmodel.DashboardViewModel.UiEvent.Use
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    val redditRepository: RedditRepository
+    private val redditRepository: RedditRepository
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(UiState())
@@ -73,9 +73,18 @@ class DashboardViewModel @Inject constructor(
         uiEvent.collect { event ->
             when (event) {
                 is UiEvent.UserSwipedList -> {
-                    if (event.direction == SwipeDirection.DOWN_TO_UP) {
-                        deleteCard(event.modelId)
+                    when(event.direction) {
+                        SwipeDirection.DOWN_TO_UP -> {
+                            deleteCard(event.cardModel.id)
+                        }
+                        SwipeDirection.UP_TO_DOWN -> {
+                            updateUiState(_uiState.value.copy(selectedCardModel = event.cardModel))
+                            submitAction(UiAction.ShowExtraInformationDialog)
+                        }
                     }
+                }
+                UiEvent.ExtraInformationDialogConfirmButtonClicked -> {
+                    submitAction(UiAction.NoAction)
                 }
             }
         }
@@ -96,7 +105,8 @@ class DashboardViewModel @Inject constructor(
     }
 
     sealed interface UiEvent {
-        data class UserSwipedList(val direction: SwipeDirection, val modelId: String) : UiEvent {
+        object ExtraInformationDialogConfirmButtonClicked : UiEvent
+        data class UserSwipedList(val direction: SwipeDirection, val cardModel: DashboardCardModel) : UiEvent {
             enum class SwipeDirection {
                 DOWN_TO_UP,
                 UP_TO_DOWN
@@ -106,6 +116,7 @@ class DashboardViewModel @Inject constructor(
 
     data class UiState(
         val models: List<DashboardCardModel> = emptyList(),
+        val selectedCardModel: DashboardCardModel? = null,
         val errorMessage: String = "",
         val state: State = State.Initial
     ) {
@@ -117,6 +128,7 @@ class DashboardViewModel @Inject constructor(
     }
 
     sealed interface UiAction {
-
+        object NoAction : UiAction
+        object ShowExtraInformationDialog: UiAction
     }
 }

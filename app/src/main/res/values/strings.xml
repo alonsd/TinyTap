@@ -2,5 +2,8 @@
 
     <!--    App Name-->
     <string name="app_name">TinyTap</string>
+    <string name="dashboard_extra_information_dialog_dismiss">Dismiss</string>
+    <string name="dashboard_extra_information_dialog_author">"Author:\n%1$s"</string>
+    <string name="dashboard_extra_information_dialog_Title">"Title:\n%1$s"</string>
 
 </resources>

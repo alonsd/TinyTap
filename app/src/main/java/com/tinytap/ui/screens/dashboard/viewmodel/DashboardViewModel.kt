@@ -18,9 +18,10 @@ class DashboardViewModel @Inject constructor(
     val uiState : StateFlow<UiState> = redditRepository.dashboardModels.map { response ->
             if (response is NetworkResponse.Error) {
                 UiState(errorMessage = response.error.localizedMessage ?: "Server error", state = UiState.State.Error)
+            } else {
+                val data = response as NetworkResponse.Success
+                UiState(models = data.body, state = UiState.State.Data)
             }
-            val data = response as NetworkResponse.Success
-            UiState(models = data.body, state = UiState.State.Data)
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(),

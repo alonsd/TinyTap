@@ -8,7 +8,10 @@ class RemoteRedditDataSourceImpl @Inject constructor(
     private val redditApi: RedditApi,
 ) : RemoteRedditDataSource {
 
-    override val bestFromReddit = flow { emit(redditApi.getBestFromReddit()) }
+    override val bestFromReddit = flow {
+        val value = redditApi.getBestFromReddit()
+        emit(value)
+    }
 }
 
 

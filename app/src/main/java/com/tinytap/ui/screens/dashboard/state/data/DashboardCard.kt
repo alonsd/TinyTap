@@ -83,7 +83,7 @@ fun DashboardCardPreview() {
             )
         ),
         model = DashboardCardModel(
-            "image", "TinyTap", "TinyTap Games"
+            "", "image", "TinyTap", "TinyTap Games"
         )
     )
 }

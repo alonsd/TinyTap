@@ -75,12 +75,6 @@ android {
         }
     }
 
-    //We don't want to use the default build variants so we ignore them.
-    variantFilter { variant ->
-        if (variant.buildType.name == 'debug' || variant.buildType.name == 'release') {
-            variant.setIgnore(true)
-        }
-    }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'

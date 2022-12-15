@@ -1,6 +1,5 @@
 package com.tinytap.core.ui
 
-import android.util.Log
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -26,8 +25,6 @@ fun SwipeToDismissVertical(
 ) = BoxWithConstraints(modifier) {
     val height = constraints.maxHeight.toFloat()
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
-    Log.d("defaultAppDebuger", "state.currentValue: ${state.currentValue}")
-
     val anchors = mutableMapOf(0f to DismissValue.Default)
     if (DismissDirection.StartToEnd in directions) anchors += height to DismissValue.DismissedToEnd
     if (DismissDirection.EndToStart in directions) anchors += -height to DismissValue.DismissedToStart

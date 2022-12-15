@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,7 +50,8 @@ fun DashboardDataState(
         LazyRow(
             modifier = Modifier
                 .wrapContentSize()
-                .padding(top = 10.dp),
+                .padding(top = 10.dp)
+                .alpha(if (dashboardCardModels.isEmpty()) 0f else 1f),
             state = lazyListState
         ) {
             items(dashboardCardModels, key = { it.id }) { model ->

@@ -30,7 +30,7 @@ fun DashboardSwipeToDismissRow(
     val dismissState = rememberDismissState()
 
     LaunchedEffect(
-        key1 = dismissState.isDismissed(DismissDirection.StartToEnd)
+        key1 = dismissState.isDismissed(DismissDirection.EndToStart)
     ) {
         dismissState.reset()
     }

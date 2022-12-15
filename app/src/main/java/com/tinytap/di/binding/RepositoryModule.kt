@@ -1,4 +1,4 @@
-package com.tinytap.di
+package com.tinytap.di.binding
 
 import com.tinytap.data.repository.RedditRepository
 import com.tinytap.data.repository.RedditRepositoryImpl

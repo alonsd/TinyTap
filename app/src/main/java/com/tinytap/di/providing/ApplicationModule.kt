@@ -1,4 +1,4 @@
-package com.tinytap.di
+package com.tinytap.di.providing
 
 import android.app.Application
 import android.content.Context

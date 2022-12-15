@@ -1,4 +1,4 @@
-package com.tinytap.di
+package com.tinytap.di.binding
 
 import com.tinytap.data.source.remote.source.reddit.RemoteRedditDataSource
 import com.tinytap.data.source.remote.source.reddit.RemoteRedditDataSourceImpl

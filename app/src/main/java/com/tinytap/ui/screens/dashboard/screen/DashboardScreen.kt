@@ -22,7 +22,8 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
 
-    val state by viewModel.uiState.collectAsState()
+//    val state by viewModel.uiState.collectAsState()
+    val state by viewModel.newUiState.collectAsState()
     val action by viewModel.uiAction.collectAsState(initial = NoAction)
 
     when (action) {
@@ -43,7 +44,7 @@ fun DashboardScreen(
                     viewModel.submitEvent(UserSwipedCard(swipeDirection, modelId))
                 },
                 onCardClicked = { model ->
-                    
+                    viewModel.submitEvent(DashboardViewModel.UiEvent.UserClickedOnCard(model))
                 }
             )
         }

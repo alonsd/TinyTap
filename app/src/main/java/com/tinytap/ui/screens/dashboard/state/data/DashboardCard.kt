@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -28,33 +29,42 @@ fun DashboardCard(
     model: DashboardCardModel,
     onCardClicked: (model: DashboardCardModel) -> Unit
 ) {
+
     Column(
         modifier = modifier
-            .size(230.dp, 300.dp)
+            .size(200.dp, 200.dp)
             .background(Color.Transparent)
             .padding(16.dp)
             .clickable {
                 onCardClicked(model)
             },
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Center
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceAround
     ) {
         if (model.showDefaultThumbnail) {
             AsyncImage(
                 modifier = Modifier
-                    .size(150.dp)
+                    .size(60.dp)
                     .clip(RoundedCornerShape(10.dp)),
                 model = model.thumbnailUrl, contentDescription = ""
             )
         } else {
             Image(
                 modifier = Modifier
-                    .size(150.dp)
+                    .size(60.dp)
                     .clip(RoundedCornerShape(10.dp)),
                 painter = painterResource(id = com.tinytap.R.drawable.tinytap),
                 contentDescription = ""
             )
         }
+        Image(
+            modifier = Modifier
+                .size(25.dp)
+                .padding(top = 10.dp)
+                .alpha(if (model.isCurrentPostOfInterest) 1f else 0f),
+            painter = painterResource(id = com.tinytap.R.drawable.post_of_interest),
+            contentDescription = null
+        )
         Text(
             modifier = Modifier.padding(top = 10.dp),
             fontSize = 16.sp,
@@ -86,7 +96,11 @@ fun DashboardCardPreview() {
             )
         ),
         model = DashboardCardModel(
-            "", "image", "TinyTap", "TinyTap Games"
+            "",
+            "image",
+            "TinyTap",
+            "TinyTap Games",
+            true
         )
     ) {}
 }

@@ -1,4 +1,4 @@
-package com.tinytap.di
+package com.tinytap.di.providing
 
 import com.haroldadmin.cnradapter.NetworkResponseAdapterFactory
 import com.tinytap.core.constants.NetworkConstants

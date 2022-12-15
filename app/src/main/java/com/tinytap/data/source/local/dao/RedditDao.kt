@@ -14,7 +14,7 @@ interface RedditDao {
     @Query("select * from RedditBest")
     fun getAllBestFromReddit() : Flow<List<BestFromRedditEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertBestFromRedditEntity(entity : BestFromRedditEntity)
 
     @Query("delete from RedditBest where :entityId = id")

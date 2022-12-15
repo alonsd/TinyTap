@@ -42,9 +42,9 @@ fun DashboardDataState(
     ) {
         DashboardDataStateHeader(
             currentPostOfInterest,
-            onNavigationToPostOfInterestError,
             dashboardCardModels,
-            lazyListState
+            lazyListState,
+            onNavigationToPostOfInterestError
         )
         LazyRow(
             modifier = Modifier

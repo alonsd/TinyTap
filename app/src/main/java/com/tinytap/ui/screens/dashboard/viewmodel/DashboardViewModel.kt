@@ -21,7 +21,8 @@ class DashboardViewModel @Inject constructor(
             if (error.isNotEmpty()) {
                 UiState(errorMessage = error, state = UiState.State.Error)
             } else {
-                UiState(models = models, state = UiState.State.Data)
+                val postOfInterest = models.find { it.isCurrentPostOfInterest }
+                UiState(models = models, currentPostOfInterest = postOfInterest, state = UiState.State.Data)
             }
         }.stateIn(
             viewModelScope,
@@ -71,6 +72,9 @@ class DashboardViewModel @Inject constructor(
     }
 
     private fun updateCurrentPostOfInterest(model: DashboardCardModel) = viewModelScope.launch(Dispatchers.IO) {
+        val currentPostOfInterest = uiState.value.currentPostOfInterest
+        val userAlreadyMarkedPostOfInterest = currentPostOfInterest != null && currentPostOfInterest.id != model.id
+        if (userAlreadyMarkedPostOfInterest) return@launch
         redditRepository.updatePostOfInterest(model.id, model.isCurrentPostOfInterest)
     }
 
@@ -99,6 +103,7 @@ class DashboardViewModel @Inject constructor(
 
     data class UiState(
         val models: List<DashboardCardModel> = mutableListOf(),
+        var currentPostOfInterest : DashboardCardModel? = null,
         val selectedCardModel: DashboardCardModel? = null,
         val errorMessage: String = "",
         val state: State = State.Initial

@@ -5,9 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface RedditLocalDataSource {
 
-    suspend fun insertBestFromRedditEntity(entity : BestFromRedditEntity)
-
-    fun getAllBestFromReddit() : Flow<List<BestFromRedditEntity>>
+    fun getAllBestFromReddit(): Flow<List<BestFromRedditEntity>>
 
     fun deleteEntity(entityId: String)
+
+    suspend fun updatePostOfInterest(entityId: String, isCurrentlyThePostOfInterest : Boolean)
+
+    suspend fun insertBestFromRedditEntity(entity: BestFromRedditEntity)
 }

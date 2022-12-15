@@ -23,7 +23,7 @@ fun DashboardScreen(
 ) {
 
 //    val state by viewModel.uiState.collectAsState()
-    val state by viewModel.newUiState.collectAsState()
+    val state by viewModel.uiState.collectAsState()
     val action by viewModel.uiAction.collectAsState(initial = NoAction)
 
     when (action) {

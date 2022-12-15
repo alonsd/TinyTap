@@ -5,9 +5,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface RedditRepository {
 
+    val networkError : Flow<String>
+
     fun getDashboardModels() : Flow<List<DashboardCardModel>>
+
+    fun deleteEntity(entityId: String)
 
     suspend fun getNewRedditModels()
 
-    fun deleteEntity(entityId: String)
+    suspend fun updatePostOfInterest(entityId: String,isCurrentlyThePostOfInterest: Boolean)
 }

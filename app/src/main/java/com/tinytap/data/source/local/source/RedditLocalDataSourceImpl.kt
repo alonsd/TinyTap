@@ -16,4 +16,12 @@ class RedditLocalDataSourceImpl @Inject constructor(
 
     override fun deleteEntity(entityId: String) = redditDao.deleteEntity(entityId)
 
+    override suspend fun updatePostOfInterest(entityId: String, isCurrentlyThePostOfInterest: Boolean) {
+        if (isCurrentlyThePostOfInterest) {
+            redditDao.removePostOfInterest(entityId)
+        } else {
+            redditDao.updatePostOfInterest(entityId)
+        }
+    }
+
 }

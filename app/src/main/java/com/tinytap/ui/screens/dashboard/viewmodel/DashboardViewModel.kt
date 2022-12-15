@@ -16,16 +16,14 @@ class DashboardViewModel @Inject constructor(
     private val redditRepository: RedditRepository
 ) : ViewModel() {
 
-    private val _uiState: MutableStateFlow<UiState> = MutableStateFlow(UiState())
-    val uiState = _uiState.asStateFlow()
-
-    val newUiState : StateFlow<UiState> = redditRepository.getDashboardModels().map { models ->
-        if (models.isEmpty()) {
-            UiState(state = UiState.State.Initial)
-        } else {
-            UiState(models = models, state = UiState.State.Data)
-        }
-    }.stateIn(
+    val uiState: StateFlow<UiState> =
+        combine(redditRepository.getDashboardModels(), redditRepository.networkError) { models, error ->
+            if (error.isNotEmpty()) {
+                UiState(errorMessage = error, state = UiState.State.Error)
+            } else {
+                UiState(models = models, state = UiState.State.Data)
+            }
+        }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             UiState()
@@ -57,8 +55,8 @@ class DashboardViewModel @Inject constructor(
                             deleteModel(event.cardModel.id)
                         }
                         SwipeDirection.UP_TO_DOWN -> {
-                            updateUiState(_uiState.value.copy(selectedCardModel = event.cardModel))
-                            submitAction(UiAction.ShowExtraInformationDialog)
+//                            updateUiState(_uiState.value.copy(selectedCardModel = event.cardModel))
+//                            submitAction(UiAction.ShowExtraInformationDialog)
                         }
                     }
                 }
@@ -66,26 +64,18 @@ class DashboardViewModel @Inject constructor(
                     submitAction(UiAction.NoAction)
                 }
                 is UiEvent.UserClickedOnCard -> {
-                    updateCurrentPostOfInterest(event)
+                    updateCurrentPostOfInterest(event.cardModel)
                 }
             }
         }
     }
 
-    private suspend fun updateCurrentPostOfInterest(event: UiEvent.UserClickedOnCard) {
-        val newList = _uiState.value.models.toMutableList().apply {
-            val item = find { it.id == event.cardModel.id } ?: return
-            item.isCurrentPostOfInterest = item.isCurrentPostOfInterest.not()
-        }
-        updateUiState(UiState(models = newList, state = UiState.State.Data))
+    private fun updateCurrentPostOfInterest(model: DashboardCardModel) = viewModelScope.launch(Dispatchers.IO) {
+        redditRepository.updatePostOfInterest(model.id, model.isCurrentPostOfInterest)
     }
 
     private fun deleteModel(modelId: String) = viewModelScope.launch(Dispatchers.IO) {
         redditRepository.deleteEntity(modelId)
-    }
-
-    private suspend fun updateUiState(uiState: UiState) {
-        _uiState.emit(uiState)
     }
 
     private fun submitAction(uiAction: UiAction) = viewModelScope.launch {

@@ -19,4 +19,10 @@ interface RedditDao {
 
     @Query("delete from RedditBest where :entityId = id")
     fun deleteEntity(entityId: String)
+
+    @Query("update RedditBest set isCurrentPostOfInterest = 1 where :entityId = id ")
+    suspend fun updatePostOfInterest(entityId: String)
+
+    @Query("update RedditBest set isCurrentPostOfInterest = 0 where :entityId = id ")
+    suspend fun removePostOfInterest(entityId: String)
 }

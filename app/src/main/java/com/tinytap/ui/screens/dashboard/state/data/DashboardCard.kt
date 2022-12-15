@@ -44,16 +44,16 @@ fun DashboardCard(
         if (model.showDefaultThumbnail) {
             AsyncImage(
                 modifier = Modifier
-                    .size(60.dp)
+                    .size(90.dp)
                     .clip(RoundedCornerShape(10.dp)),
                 model = model.thumbnailUrl, contentDescription = ""
             )
         } else {
             Image(
                 modifier = Modifier
-                    .size(60.dp)
+                    .size(90.dp)
                     .clip(RoundedCornerShape(10.dp)),
-                painter = painterResource(id = com.tinytap.R.drawable.tinytap),
+                painter =  painterResource(id = com.tinytap.R.drawable.tinytap),
                 contentDescription = ""
             )
         }

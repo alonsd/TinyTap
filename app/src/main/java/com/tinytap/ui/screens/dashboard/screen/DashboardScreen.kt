@@ -22,15 +22,14 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
 
-//    val state by viewModel.uiState.collectAsState()
     val state by viewModel.uiState.collectAsState()
     val action by viewModel.uiAction.collectAsState(initial = NoAction)
 
     when (action) {
         NoAction -> Unit
         is DashboardViewModel.UiAction.ShowExtraInformationDialog -> {
-            val selectedCard = state.selectedCardModel ?: return
-            DashboardExtraInformationDialog(selectedCard) {
+            val extraInformationModel = state.extraInformationCardModel ?: return
+            DashboardExtraInformationDialog(extraInformationModel) {
                 viewModel.submitEvent(DashboardViewModel.UiEvent.ExtraInformationDialogConfirmButtonClicked)
             }
         }

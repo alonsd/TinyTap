@@ -16,13 +16,24 @@ class DashboardViewModel @Inject constructor(
     private val redditRepository: RedditRepository
 ) : ViewModel() {
 
+    private val extraInformationCardModel = MutableStateFlow<DashboardCardModel?>(null)
+
     val uiState: StateFlow<UiState> =
-        combine(redditRepository.getDashboardModels(), redditRepository.networkError) { models, error ->
+        combine(
+            redditRepository.getDashboardModels(),
+            redditRepository.networkError,
+            extraInformationCardModel
+        ) { models, error, extraInformationCardModel ->
             if (error.isNotEmpty()) {
                 UiState(errorMessage = error, state = UiState.State.Error)
             } else {
                 val postOfInterest = models.find { it.isCurrentPostOfInterest }
-                UiState(models = models, currentPostOfInterest = postOfInterest, state = UiState.State.Data)
+                UiState(
+                    models = models,
+                    currentPostOfInterest = postOfInterest,
+                    extraInformationCardModel = extraInformationCardModel,
+                    state = UiState.State.Data
+                )
             }
         }.stateIn(
             viewModelScope,
@@ -56,8 +67,8 @@ class DashboardViewModel @Inject constructor(
                             deleteModel(event.cardModel.id)
                         }
                         SwipeDirection.UP_TO_DOWN -> {
-//                            updateUiState(_uiState.value.copy(selectedCardModel = event.cardModel))
-//                            submitAction(UiAction.ShowExtraInformationDialog)
+                            setExtraInformationCardModel(event.cardModel)
+                            submitAction(UiAction.ShowExtraInformationDialog)
                         }
                     }
                 }
@@ -69,6 +80,10 @@ class DashboardViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun setExtraInformationCardModel(cardModel: DashboardCardModel) = viewModelScope.launch {
+        extraInformationCardModel.emit(cardModel)
     }
 
     private fun updateCurrentPostOfInterest(model: DashboardCardModel) = viewModelScope.launch(Dispatchers.IO) {
@@ -103,8 +118,8 @@ class DashboardViewModel @Inject constructor(
 
     data class UiState(
         val models: List<DashboardCardModel> = mutableListOf(),
-        var currentPostOfInterest : DashboardCardModel? = null,
-        val selectedCardModel: DashboardCardModel? = null,
+        var currentPostOfInterest: DashboardCardModel? = null,
+        val extraInformationCardModel: DashboardCardModel? = null,
         val errorMessage: String = "",
         val state: State = State.Initial
     ) {

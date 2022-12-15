@@ -36,30 +36,16 @@ fun DashboardSwipeToDismissRow(
     }
     when {
         dismissState.isDismissed(DismissDirection.EndToStart) -> {
-            onCardSwiped(SwipeDirection.DOWN_TO_UP, model)
+            onCardSwiped(SwipeDirection.UP_TO_DOWN, model)
         }
         dismissState.isDismissed(DismissDirection.StartToEnd) -> {
-            onCardSwiped(SwipeDirection.UP_TO_DOWN, model)
+            onCardSwiped(SwipeDirection.DOWN_TO_UP, model)
         }
     }
 
     SwipeToDismissVertical(
         state = dismissState,
-        background = {
-            val color by animateColorAsState(
-                when (dismissState.targetValue) {
-                    DismissValue.Default -> Color.Transparent
-                    DismissValue.DismissedToEnd -> Color.Blue
-                    DismissValue.DismissedToStart -> Color.Red
-                    else -> Color.Transparent
-                }
-            )
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(color)
-            )
-        },
+        background = {},
         dismissContent = {
             DashboardCard(
                 model = model,

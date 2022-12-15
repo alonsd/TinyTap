@@ -1,27 +1,20 @@
 package com.tinytap.ui.screens.dashboard.state.data
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Button
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCompositionContext
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tinytap.R
 import com.tinytap.model.ui_models.DashboardCardModel
 import com.tinytap.ui.screens.dashboard.viewmodel.DashboardViewModel.UiEvent.UserSwipedCard.SwipeDirection
 import com.tinytap.ui.theme.backgroundEndColor
 import com.tinytap.ui.theme.backgroundStartColor
-import kotlinx.coroutines.launch
 
 @Composable
 fun DashboardDataState(
@@ -33,7 +26,6 @@ fun DashboardDataState(
 ) {
 
     val lazyListState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -48,24 +40,12 @@ fun DashboardDataState(
             ),
         verticalArrangement = Arrangement.Center
     ) {
-
-        Button(modifier = Modifier.padding(start = 10.dp), onClick = {
-            if (currentPostOfInterest == null) {
-                onNavigationToPostOfInterestError()
-                return@Button
-            }
-            coroutineScope.launch {
-                val indexOfPostOfInterest = dashboardCardModels.indexOf(currentPostOfInterest)
-                lazyListState.animateScrollToItem(indexOfPostOfInterest)
-            }
-        }) {
-            Image(
-                modifier = Modifier.size(25.dp),
-                painter = painterResource(id = R.drawable.navigate_to_post_of_interest),
-                contentDescription = null
-            )
-        }
-
+        DashboardDataStateHeader(
+            currentPostOfInterest,
+            onNavigationToPostOfInterestError,
+            dashboardCardModels,
+            lazyListState
+        )
         LazyRow(
             modifier = Modifier
                 .wrapContentSize()

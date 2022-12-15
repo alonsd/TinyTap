@@ -64,11 +64,11 @@ class DashboardViewModel @Inject constructor(
                 is UiEvent.UserSwipedCard -> {
                     when (event.direction) {
                         SwipeDirection.DOWN_TO_UP -> {
-                            deleteModel(event.cardModel.id)
-                        }
-                        SwipeDirection.UP_TO_DOWN -> {
                             setExtraInformationCardModel(event.cardModel)
                             submitAction(UiAction.ShowExtraInformationDialog)
+                        }
+                        SwipeDirection.UP_TO_DOWN -> {
+                            deleteModel(event.cardModel.id)
                         }
                     }
                 }

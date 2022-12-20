@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,41 +33,46 @@ fun DashboardCard(
 
     Column(
         modifier = modifier
-            .size(200.dp, 200.dp)
+            .wrapContentHeight()
+            .width(200.dp)
             .background(Color.Transparent)
             .padding(16.dp)
             .clickable {
                 onCardClicked(model)
             },
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
     ) {
+        val painter = painterResource(id = com.tinytap.R.drawable.tinytap)
         if (model.showDefaultThumbnail) {
             AsyncImage(
                 modifier = Modifier
-                    .size(90.dp)
+                    .padding(start = 16.dp, end = 16.dp, top = 5.dp)
+                    .size(130.dp)
                     .clip(RoundedCornerShape(10.dp)),
+                alignment = Alignment.TopStart,
+                contentScale = ContentScale.FillBounds,
                 model = model.thumbnailUrl, contentDescription = ""
             )
         } else {
             Image(
                 modifier = Modifier
-                    .size(90.dp)
+                    .padding(start = 16.dp, end = 16.dp, top = 5.dp)
+                    .size(130.dp)
                     .clip(RoundedCornerShape(10.dp)),
-                painter =  painterResource(id = com.tinytap.R.drawable.tinytap),
+                alignment = Alignment.TopStart,
+                painter = painterResource(id = com.tinytap.R.drawable.tinytap),
                 contentDescription = ""
             )
         }
         Image(
             modifier = Modifier
                 .size(25.dp)
-                .padding(top = 10.dp)
+                .padding(top = 10.dp, start = 16.dp)
                 .alpha(if (model.isCurrentPostOfInterest) 1f else 0f),
             painter = painterResource(id = com.tinytap.R.drawable.post_of_interest),
             contentDescription = null
         )
         Text(
-            modifier = Modifier.padding(top = 10.dp),
+            modifier = Modifier.padding(top = 10.dp, start = 16.dp),
             fontSize = 16.sp,
             color = Color.White,
             text = model.title,
@@ -74,6 +80,7 @@ fun DashboardCard(
             overflow = TextOverflow.Ellipsis
         )
         Text(
+            modifier = Modifier.padding(start = 16.dp, bottom = 5.dp),
             text = model.author,
             fontSize = 12.sp,
             color = Color.LightGray,

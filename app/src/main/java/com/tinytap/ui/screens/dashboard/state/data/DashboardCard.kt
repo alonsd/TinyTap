@@ -41,7 +41,6 @@ fun DashboardCard(
                 onCardClicked(model)
             },
     ) {
-        val painter = painterResource(id = com.tinytap.R.drawable.tinytap)
         if (model.showDefaultThumbnail) {
             AsyncImage(
                 modifier = Modifier

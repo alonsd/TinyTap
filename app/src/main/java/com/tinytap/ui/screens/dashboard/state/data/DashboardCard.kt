@@ -72,7 +72,7 @@ fun DashboardCard(
             contentDescription = null
         )
         Text(
-            modifier = Modifier.padding(top = 10.dp, start = 16.dp),
+            modifier = Modifier.padding(top = 10.dp, start = 16.dp, end = 16.dp),
             fontSize = 16.sp,
             color = Color.White,
             text = model.title,
@@ -80,7 +80,7 @@ fun DashboardCard(
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            modifier = Modifier.padding(start = 16.dp, bottom = 5.dp),
+            modifier = Modifier.padding(start = 16.dp, bottom = 5.dp, end = 16.dp),
             text = model.author,
             fontSize = 12.sp,
             color = Color.LightGray,
